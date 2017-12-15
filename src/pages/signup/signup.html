@@ -3,20 +3,27 @@
 
     <ion-item>
       <ion-label stacked>Nombre</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" [(ngModel)]="userData.name"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label stacked>Apellido</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" [(ngModel)]="userData.lastname" ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label stacked>Email</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" [(ngModel)]="userData.email" ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label stacked>Password</ion-label>
-      <ion-input type="password"></ion-input>
+      <ion-input type="password" [(ngModel)]="userData.password" ></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label stacked>Confirmacion de Password</ion-label>
+      <ion-input type="password" [(ngModel)]="userData.password_confirmation" ></ion-input>
+    </ion-item>
+
     <button ion-button block color="primary" (click)="signup()">Registrarse</button>
+
+    <a href="#" (click)="login()" >Login</a>
   </ion-list>
 </ion-content>

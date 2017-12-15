@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AuthService } from '../../providers/auth-service/auth-service';
+import { TabsPage } from '../tabs/tabs'
 
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -15,11 +11,25 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  responseData : any;
+  userData = {"email": "","password":""};
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+  }
+
+  login(){
+    this.authService.postData(this.userData, "authentication").then((result) => {
+      this.responseData = result;
+      localStorage.setItem('userData', JSON.stringify(this.responseData))
+      this.navCtrl.push(TabsPage);
+    }, (err) => {
+      //Connection Failed Message
+      console.log(JSON.stringify(err._body))
+    });
   }
 
 }
