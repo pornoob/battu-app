@@ -12,9 +12,14 @@ export class HomePage {
     const data = JSON.parse(localStorage.getItem('userData'))
     this.userDetail = data.userData
   }
-  logout(){
-    //Api Token Logout
+  backToWelcome(){
     const root = this.app.getRootNav();
     root.popToRoot();
+  }
+  logout(){
+    //Api Token Logout
+    console.log("aaa")
+    localStorage.clear();
+    setTimeout(()=> this.backToWelcome, 1000);
   }
 }
