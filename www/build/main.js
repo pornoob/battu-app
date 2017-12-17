@@ -33,7 +33,7 @@ var SignupPage = (function () {
         this.navCtrl = navCtrl;
         this.navParams = navParams;
         this.authService = authService;
-        this.userData = { "name": "", "lastname": "", "email": "", "password": "", "password_confirmation": "" };
+        this.userData = { "user": { "name": "", "lastname": "", "email": "", "password": "", "password_confirmation": "" } };
     }
     SignupPage.prototype.ionViewDidLoad = function () {
         console.log('ionViewDidLoad SignupPage');
@@ -54,7 +54,7 @@ var SignupPage = (function () {
     };
     SignupPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-signup',template:/*ion-inline-start:"/Users/Mts/apptec/battu-app/src/pages/signup/signup.html"*/'<ion-content>\n  <ion-list>\n\n    <ion-item>\n      <ion-label stacked>Nombre</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.name"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Apellido</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.lastname" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Email</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.email" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="userData.password" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Confirmacion de Password</ion-label>\n      <ion-input type="password" [(ngModel)]="userData.password_confirmation" ></ion-input>\n    </ion-item>\n\n    <button ion-button block color="primary" (click)="signup()">Registrarse</button>\n\n    <a href="#" (click)="login()" >Login</a>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"/Users/Mts/apptec/battu-app/src/pages/signup/signup.html"*/,
+            selector: 'page-signup',template:/*ion-inline-start:"/Users/Mts/apptec/battu-app/src/pages/signup/signup.html"*/'<ion-content>\n  <ion-list>\n\n    <ion-item>\n      <ion-label stacked>Nombre</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.user.name"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Apellido</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.user.lastname" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Email</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.user.email" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="userData.user.password" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Confirmacion de Password</ion-label>\n      <ion-input type="password" [(ngModel)]="userData.user.password_confirmation" ></ion-input>\n    </ion-item>\n\n    <button ion-button block color="primary" (click)="signup()">Registrarse</button>\n\n    <a href="#" (click)="login()" >Login</a>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"/Users/Mts/apptec/battu-app/src/pages/signup/signup.html"*/,
         }),
         __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__providers_auth_service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_auth_service_auth_service__["a" /* AuthService */]) === "function" && _c || Object])
     ], SignupPage);
@@ -521,12 +521,24 @@ var AuthService = (function () {
             });
         });
     };
+    AuthService.prototype.deleteData = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ "Content-Type": "application/json", "client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
+            var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
+            _this.http.delete(apiUrl + path, options)
+                .subscribe(function (res) {
+                resolve({ "data": res.json(), "headers": res.headers });
+            }, function (err) {
+                reject(err);
+            });
+        });
+    };
     AuthService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
     ], AuthService);
     return AuthService;
-    var _a;
 }());
 
 //# sourceMappingURL=auth-service.js.map
@@ -581,10 +593,9 @@ var LoginPage = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-login',template:/*ion-inline-start:"/Users/Mts/apptec/battu-app/src/pages/login/login.html"*/'<ion-list>\n\n  <ion-item>\n    <ion-label stacked>Username</ion-label>\n    <ion-input type="text" [(ngModel)]="userData.email"></ion-input>\n  </ion-item>\n\n  <ion-item>\n    <ion-label stacked>Password</ion-label>\n    <ion-input type="password" [(ngModel)]="userData.password"></ion-input>\n  </ion-item>\n  <button ion-button block color="primary" (click)="login()">Entrar</button>\n</ion-list>\n'/*ion-inline-end:"/Users/Mts/apptec/battu-app/src/pages/login/login.html"*/,
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__providers_auth_service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_auth_service_auth_service__["a" /* AuthService */]) === "function" && _c || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__providers_auth_service_auth_service__["a" /* AuthService */]])
     ], LoginPage);
     return LoginPage;
-    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=login.js.map

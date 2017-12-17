@@ -18,7 +18,7 @@ import { AuthService } from '../../providers/auth-service/auth-service'
 export class SignupPage {
 
   responseData : any;
-  userData = {"name": "", "lastname": "", "email": "","password":"", "password_confirmation": ""};
+  userData = {"user": {"name": "", "lastname": "", "email": "","password":"", "password_confirmation": ""}};
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService) {
   }
