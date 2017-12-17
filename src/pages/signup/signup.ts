@@ -28,10 +28,10 @@ export class SignupPage {
   }
 
   signup(){
-    this.authService.postData(this.userData, "users").then((result) => {
+    this.authService.postData(this.userData, "auth/").then((result) => {
       this.responseData = result;
-      localStorage.setItem('userData', JSON.stringify(this.responseData))
-      this.navCtrl.push(TabsPage);
+      // localStorage.setItem('userData', JSON.stringify(this.responseData))
+      // this.navCtrl.push(TabsPage);
     }, (err) => {
       //Connection Failed Message
       console.log(JSON.stringify(err._body))

@@ -22,9 +22,10 @@ export class LoginPage {
   }
 
   login(){
-    this.authService.postData(this.userData, "authentication").then((result) => {
+    this.authService.postData(this.userData, "auth/sign_in").then((result) => {
       this.responseData = result;
-      localStorage.setItem('userData', JSON.stringify(this.responseData))
+      localStorage.setItem('userData', JSON.stringify(this.responseData.data));
+      localStorage.setItem('headers', JSON.stringify(this.responseData.headers));
       this.navCtrl.push(TabsPage);
     }, (err) => {
       //Connection Failed Message
