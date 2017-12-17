@@ -282,7 +282,9 @@ var HomePage = (function () {
     HomePage.prototype.getFeed = function () {
         var _this = this;
         this.authService.getData(null, "auth/validate_token", this.headers).then(function (result) {
-            // OK
+            _this.responseData = result;
+            localStorage.removeItem('headers');
+            localStorage.setItem('headers', JSON.stringify(_this.responseData.headers));
         }, function (err) {
             //Connection Failed Message
             console.log("NO ACCESS");
@@ -509,7 +511,6 @@ var AuthService = (function () {
     };
     AuthService.prototype.getData = function (credentials, path, send_headers) {
         var _this = this;
-        if (send_headers === void 0) { send_headers = null; }
         return new Promise(function (resolve, reject) {
             var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ "Content-Type": "application/json", "client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
             var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
@@ -536,9 +537,10 @@ var AuthService = (function () {
     };
     AuthService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
     ], AuthService);
     return AuthService;
+    var _a;
 }());
 
 //# sourceMappingURL=auth-service.js.map

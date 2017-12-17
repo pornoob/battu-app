@@ -24,7 +24,7 @@ export class AuthService {
     });
   }
 
-  getData(credentials, path, send_headers = null) {
+  getData(credentials, path, send_headers) {
     return new Promise((resolve, reject) => {
       let headers = new Headers({"Content-Type": "application/json","client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
       let options = new RequestOptions({ headers: headers });

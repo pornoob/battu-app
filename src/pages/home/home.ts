@@ -15,18 +15,20 @@ export class HomePage {
     const headers = JSON.parse(localStorage.getItem('headers'));
     this.userDetail = response.data;
     this.user_id = this.userDetail.id;
-    this.headers = headers
+    this.headers = headers;
     this.getFeed();
   }
 
   getFeed(){
     this.authService.getData(null, "auth/validate_token", this.headers).then((result) => {
-    // OK
+      this.responseData = result;
+      localStorage.removeItem('headers');
+      localStorage.setItem('headers', JSON.stringify(this.responseData.headers));
     }, (err) => {
       //Connection Failed Message
       console.log("NO ACCESS");
       console.log(JSON.stringify(err._body));
-      this.logout()
+      this.logout();
     });
   }
 
