@@ -17,7 +17,7 @@ export class HomePage {
   }
 
   getData(){
-    this.authService.getData(null, "auth/validate_token", this.headers).then((result) => {
+    this.authService.getData(null, "base", JSON.parse(localStorage.getItem('headers'))).then((result) => {
 
     }, (err) => {
       //Connection Failed Message

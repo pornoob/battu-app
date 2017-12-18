@@ -52,8 +52,13 @@ export class AuthService {
 
   validate_token(){
     this.getData(null, "auth/validate_token", JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      localStorage.removeItem('headers');
-      localStorage.setItem('headers', JSON.stringify(result.headers));
+      let result_headers = JSON.stringify(result.headers);
+      let rep = JSON.parse(result_headers);
+      if (rep["access-token"]){
+        console.log("Re write TOKEN ");
+        localStorage.removeItem('headers');
+        localStorage.setItem('headers', JSON.stringify(result.headers));
+      }
     }, (err) => {
       //Connection Failed Message
       console.log("NO ACCESS");
