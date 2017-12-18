@@ -56,10 +56,9 @@ var SignupPage = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-signup',template:/*ion-inline-start:"/Users/Mts/apptec/battu-app/src/pages/signup/signup.html"*/'<ion-content>\n  <ion-list>\n\n    <ion-item>\n      <ion-label stacked>Nombre</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.user.name"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Apellido</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.user.lastname" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Email</ion-label>\n      <ion-input type="text" [(ngModel)]="userData.user.email" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="userData.user.password" ></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label stacked>Confirmacion de Password</ion-label>\n      <ion-input type="password" [(ngModel)]="userData.user.password_confirmation" ></ion-input>\n    </ion-item>\n\n    <button ion-button block color="primary" (click)="signup()">Registrarse</button>\n\n    <a href="#" (click)="login()" >Login</a>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"/Users/Mts/apptec/battu-app/src/pages/signup/signup.html"*/,
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__providers_auth_service_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_auth_service_auth_service__["a" /* AuthService */]) === "function" && _c || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_3__providers_auth_service_auth_service__["a" /* AuthService */]])
     ], SignupPage);
     return SignupPage;
-    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=signup.js.map
@@ -273,23 +272,15 @@ var HomePage = (function () {
         this.authService = authService;
         this.userData = { "user_id": "", "token": "" };
         var response = JSON.parse(localStorage.getItem('userData'));
-        var headers = JSON.parse(localStorage.getItem('headers'));
         this.userDetail = response.data;
-        this.user_id = this.userDetail.id;
-        this.headers = headers;
-        this.getFeed();
+        this.authService.validate_token();
     }
-    HomePage.prototype.getFeed = function () {
-        var _this = this;
+    HomePage.prototype.getData = function () {
         this.authService.getData(null, "auth/validate_token", this.headers).then(function (result) {
-            _this.responseData = result;
-            localStorage.removeItem('headers');
-            localStorage.setItem('headers', JSON.stringify(_this.responseData.headers));
         }, function (err) {
             //Connection Failed Message
             console.log("NO ACCESS");
             console.log(JSON.stringify(err._body));
-            _this.logout();
         });
     };
     HomePage.prototype.backToWelcome = function () {
@@ -499,11 +490,11 @@ var AuthService = (function () {
         var _this = this;
         if (send_headers === void 0) { send_headers = null; }
         return new Promise(function (resolve, reject) {
-            var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ "Content-Type": "application/json" });
+            var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ "Content-Type": "application/json", "Access-Control-Allow-Headers": "*" });
             var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
             _this.http.post(apiUrl + path, JSON.stringify(credentials), options)
                 .subscribe(function (res) {
-                resolve({ "data": res.json(), "headers": res.headers });
+                resolve({ "data": res.json(), "headers": res.headers, "status": res.status });
             }, function (err) {
                 reject(err);
             });
@@ -512,11 +503,11 @@ var AuthService = (function () {
     AuthService.prototype.getData = function (credentials, path, send_headers) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ "Content-Type": "application/json", "client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
+            var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ "Content-Type": "application/json", "Access-Control-Allow-Headers": "*", "client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
             var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
             _this.http.get(apiUrl + path, options)
                 .subscribe(function (res) {
-                resolve({ "data": res.json(), "headers": res.headers });
+                resolve({ "data": res.json(), "headers": res.headers, "status": res.status });
             }, function (err) {
                 reject(err);
             });
@@ -529,10 +520,20 @@ var AuthService = (function () {
             var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
             _this.http.delete(apiUrl + path, options)
                 .subscribe(function (res) {
-                resolve({ "data": res.json(), "headers": res.headers });
+                resolve({ "data": res.json(), "headers": res.headers, "status": res.status });
             }, function (err) {
                 reject(err);
             });
+        });
+    };
+    AuthService.prototype.validate_token = function () {
+        this.getData(null, "auth/validate_token", JSON.parse(localStorage.getItem('headers'))).then(function (result) {
+            localStorage.removeItem('headers');
+            localStorage.setItem('headers', JSON.stringify(result.headers));
+        }, function (err) {
+            //Connection Failed Message
+            console.log("NO ACCESS");
+            console.log(JSON.stringify(err._body));
         });
     };
     AuthService = __decorate([

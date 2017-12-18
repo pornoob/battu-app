@@ -12,23 +12,17 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public app: App, public authService: AuthService) {
     const response = JSON.parse(localStorage.getItem('userData'));
-    const headers = JSON.parse(localStorage.getItem('headers'));
     this.userDetail = response.data;
-    this.user_id = this.userDetail.id;
-    this.headers = headers;
-    this.getFeed();
+    this.authService.validate_token();
   }
 
-  getFeed(){
+  getData(){
     this.authService.getData(null, "auth/validate_token", this.headers).then((result) => {
-      this.responseData = result;
-      localStorage.removeItem('headers');
-      localStorage.setItem('headers', JSON.stringify(this.responseData.headers));
+
     }, (err) => {
       //Connection Failed Message
       console.log("NO ACCESS");
       console.log(JSON.stringify(err._body));
-      this.logout();
     });
   }
 
