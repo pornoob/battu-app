@@ -37,7 +37,23 @@ export class AuthService {
     });
   }
 
-  deleteData(){
+  validate_token(){
+    this.getData(null, "auth/validate_token", JSON.parse(localStorage.getItem('headers'))).then((result) => {
+      let result_headers = JSON.stringify(result.headers);
+      let rep = JSON.parse(result_headers);
+      if (rep["access-token"]){
+        console.log("Re write TOKEN: "+rep["access-token"]);
+        localStorage.removeItem('headers');
+        localStorage.setItem('headers', JSON.stringify(result.headers));
+      }
+    }, (err) => {
+      //Connection Failed Message
+      console.log("No Access");
+      console.log(JSON.stringify(err._body));
+    });
+  }
+
+  deleteData(credentials, path, send_headers){
     return new Promise((resolve, reject) => {
       let headers = new Headers({"Content-Type": "application/json","client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
       let options = new RequestOptions({ headers: headers });
@@ -50,19 +66,4 @@ export class AuthService {
     });
   }
 
-  validate_token(){
-    this.getData(null, "auth/validate_token", JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      let result_headers = JSON.stringify(result.headers);
-      let rep = JSON.parse(result_headers);
-      if (rep["access-token"]){
-        console.log("Re write TOKEN ");
-        localStorage.removeItem('headers');
-        localStorage.setItem('headers', JSON.stringify(result.headers));
-      }
-    }, (err) => {
-      //Connection Failed Message
-      console.log("NO ACCESS");
-      console.log(JSON.stringify(err._body));
-    });
-  }
 }

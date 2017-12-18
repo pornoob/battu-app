@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service/auth-service';
+import { WelcomePage } from '../welcome/welcome';
 
 @Component({
   selector: 'page-home',
@@ -9,14 +10,17 @@ import { AuthService } from '../../providers/auth-service/auth-service';
 export class HomePage {
   public userDetail : any;
   public data : any;
-
+  isLoggedIn: boolean = false;
   userData = {"user_id": "", "token": ""};
 
   constructor(public navCtrl: NavController, public app: App, public authService: AuthService) {
-    const response = JSON.parse(localStorage.getItem('userData'));
-    this.userDetail = response.data;
-    this.authService.validate_token();
-    this.getData();
+    if(localStorage.getItem("headers")) {
+      this.isLoggedIn = true;
+      const response = JSON.parse(localStorage.getItem('userData'));
+      this.userDetail = response.data;
+      this.validate_token();
+      this.getData();
+   }
   }
 
   getData(){
@@ -24,14 +28,30 @@ export class HomePage {
       this.data = result.data.data.message;
     }, (err) => {
       //Connection Failed Message
-      console.log("NO ACCESS");
+      console.log("No Data");
       console.log(JSON.stringify(err._body));
     });
   }
 
+  validate_token(){
+    if (JSON.parse(localStorage.getItem('headers'))){
+      if (this.authService.validate_token()){
+
+      }else{
+        console.log("SALIO");
+        // localStorage.clear();
+        // this.navCtrl.setRoot(WelcomePage);
+      }
+    }else{
+      // localStorage.clear();
+      // this.navCtrl.setRoot(WelcomePage);
+      console.log("No headers");
+    }
+  }
+
   backToWelcome(){
     const root = this.app.getRootNav();
-    root.popToRoot();
+    root.setRoot(WelcomePage);
   }
 
   logout(){
