@@ -16,6 +16,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { HttpModule } from '@angular/http';
 
@@ -48,7 +49,7 @@ import { HttpModule } from '@angular/http';
   ],
   providers: [
     StatusBar,
-    SplashScreen, AuthService,
+    SplashScreen, AuthService, Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
