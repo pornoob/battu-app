@@ -17,6 +17,7 @@ export class AuthService {
       let options = new RequestOptions({ headers: headers });
       this.http.post(apiUrl + path, JSON.stringify(credentials), options)
         .subscribe(res => {
+          this.refresh_token(res.headers);
           resolve({"data": res.json(), "headers": res.headers,"status": res.status});
         }, (err) => {
           reject(err);
@@ -30,6 +31,7 @@ export class AuthService {
       let options = new RequestOptions({ headers: headers });
       this.http.get(apiUrl + path, options)
         .subscribe(res => {
+          this.refresh_token(res.headers);
           resolve(res.json());
         }, (err) => {
           reject(err);
@@ -51,18 +53,22 @@ export class AuthService {
   }
   validate_token(){
     this.getToken(JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      let result_headers = JSON.stringify(result);
-      let rep = JSON.parse(result_headers);
-      if (rep["access-token"]){
-        console.log("Re write TOKEN: "+rep["access-token"]);
-        localStorage.removeItem('headers');
-        localStorage.setItem('headers', JSON.stringify(result));
-      }
+      this.refresh_token(rep);
     }, (err) => {
       //Connection Failed Message
       console.log("No Access");
       console.log(JSON.stringify(err._body));
     });
+  }
+
+  refresh_token(headers){
+    let result_headers = JSON.stringify(headers);
+    let rep = JSON.parse(result_headers);
+    if(rep["access-token"]){
+      console.log("Refreshing Token "+ rep["access-token"]);
+      localStorage.removeItem('headers');
+      localStorage.setItem('headers', JSON.stringify(headers));
+    }
   }
 
   deleteData(credentials, path, send_headers){
