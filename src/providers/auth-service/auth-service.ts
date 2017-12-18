@@ -3,7 +3,7 @@ import {Http, Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
 
 let apiUrl = 'http://localhost:3000/api/v1/';
-
+let validate_token = "auth/validate_token"
 @Injectable()
 export class AuthService {
 
@@ -30,21 +30,33 @@ export class AuthService {
       let options = new RequestOptions({ headers: headers });
       this.http.get(apiUrl + path, options)
         .subscribe(res => {
-          resolve({"data": res.json(), "headers": res.headers,"status": res.status});
+          resolve(res.json());
         }, (err) => {
           reject(err);
         });
     });
   }
 
+  getToken(send_headers) {
+    return new Promise((resolve, reject) => {
+      let headers = new Headers({"Content-Type": "application/json","Access-Control-Allow-Headers": "*","client": send_headers["client"], "expiry": send_headers["expiry"], "token-type": send_headers["token-type"], "uid": send_headers["uid"], "access-token": send_headers["access-token"] });
+      let options = new RequestOptions({ headers: headers });
+      this.http.get(apiUrl + validate_token, options)
+        .subscribe(res => {
+          resolve(res.headers);
+        }, (err) => {
+          reject(err);
+        });
+    });
+  }
   validate_token(){
-    this.getData(null, "auth/validate_token", JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      let result_headers = JSON.stringify(result.headers);
+    this.getToken(JSON.parse(localStorage.getItem('headers'))).then((result) => {
+      let result_headers = JSON.stringify(result);
       let rep = JSON.parse(result_headers);
       if (rep["access-token"]){
         console.log("Re write TOKEN: "+rep["access-token"]);
         localStorage.removeItem('headers');
-        localStorage.setItem('headers', JSON.stringify(result.headers));
+        localStorage.setItem('headers', JSON.stringify(result));
       }
     }, (err) => {
       //Connection Failed Message

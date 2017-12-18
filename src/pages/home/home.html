@@ -5,8 +5,13 @@
 </ion-header>
 
 <ion-content padding>
-  <h1>{{data}}</h1>
+  <h1>{{ message }}</h1>
   <p>
+    <ion-card *ngFor="let item of dataSet">
+      <ion-card-content>
+        {{ item.email }}
+      </ion-card-content>
+    </ion-card>
   <button ion-button color="primary" (click)="logout()">Salir</button>
   </p>
   <p>

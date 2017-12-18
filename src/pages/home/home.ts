@@ -9,44 +9,28 @@ import { WelcomePage } from '../welcome/welcome';
 })
 export class HomePage {
   public userDetail : any;
-  public data : any;
-  isLoggedIn: boolean = false;
-  userData = {"user_id": "", "token": ""};
+  public dato : any;
+  public dataSet : any;
+  public message : any;
 
   constructor(public navCtrl: NavController, public app: App, public authService: AuthService) {
-    if(localStorage.getItem("headers")) {
-      this.isLoggedIn = true;
       const response = JSON.parse(localStorage.getItem('userData'));
       this.userDetail = response.data;
-      this.validate_token();
-      this.getData();
-   }
+      this.getDataUsers();
   }
 
-  getData(){
-    this.authService.getData(null, "base", JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      this.data = result.data.data.message;
+  getDataUsers(){
+    this.authService.getData(null, "base/users", JSON.parse(localStorage.getItem('headers'))).then((result) => {
+      this.dato = result;
+      if (this.dato.users.data){
+        this.dataSet = this.dato.users.data
+        this.message = this.dato.data.message
+      }
     }, (err) => {
       //Connection Failed Message
       console.log("No Data");
       console.log(JSON.stringify(err._body));
     });
-  }
-
-  validate_token(){
-    if (JSON.parse(localStorage.getItem('headers'))){
-      if (this.authService.validate_token()){
-
-      }else{
-        console.log("SALIO");
-        // localStorage.clear();
-        // this.navCtrl.setRoot(WelcomePage);
-      }
-    }else{
-      // localStorage.clear();
-      // this.navCtrl.setRoot(WelcomePage);
-      console.log("No headers");
-    }
   }
 
   backToWelcome(){
