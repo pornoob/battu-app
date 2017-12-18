@@ -53,7 +53,7 @@ export class AuthService {
   }
   validate_token(){
     this.getToken(JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      this.refresh_token(rep);
+      this.refresh_token(result);
     }, (err) => {
       //Connection Failed Message
       console.log("No Access");
