@@ -8,17 +8,20 @@ import { AuthService } from '../../providers/auth-service/auth-service';
 })
 export class HomePage {
   public userDetail : any;
+  public data : any;
+
   userData = {"user_id": "", "token": ""};
 
   constructor(public navCtrl: NavController, public app: App, public authService: AuthService) {
     const response = JSON.parse(localStorage.getItem('userData'));
     this.userDetail = response.data;
     this.authService.validate_token();
+    this.getData();
   }
 
   getData(){
     this.authService.getData(null, "base", JSON.parse(localStorage.getItem('headers'))).then((result) => {
-
+      this.data = result.data.data.message;
     }, (err) => {
       //Connection Failed Message
       console.log("NO ACCESS");
