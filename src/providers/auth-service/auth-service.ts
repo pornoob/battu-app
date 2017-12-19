@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions} from '@angular/http';
+import { StorageService } from '../../providers/storage-service/storage-service';
 import 'rxjs/add/operator/map';
 
 let apiUrl = 'http://localhost:3000/api/v1/';
@@ -7,7 +8,7 @@ let validate_token = "auth/validate_token"
 @Injectable()
 export class AuthService {
 
-  constructor(public http : Http) {
+  constructor(public http : Http, private storageService: StorageService) {
     console.log('Hello AuthService Provider');
   }
 
@@ -68,6 +69,7 @@ export class AuthService {
       console.log("Refreshing Token "+ rep["access-token"]);
       localStorage.removeItem('headers');
       localStorage.setItem('headers', JSON.stringify(headers));
+      this.storageService.set('headers',JSON.stringify(headers));
     }
   }
 
