@@ -35,17 +35,18 @@ export class HomePage {
   }
 
   getDataUsers(){
-    this.authService.getData(null, "base/users", JSON.parse(localStorage.getItem('headers'))).then((result) => {
-      this.dato = result;
-      if (this.dato.users.data){
-        this.dataSet = this.dato.users.data
-        this.message = this.dato.data.message
+    var self = this;
+    this.storageService.get("headers").then(result => {
+      console.log("aca tamos promise 1", result);
+      return self.authService.getData(null, "base/users", JSON.parse(result))
+    }).then(result => {
+      console.log("aca tamos promise 2", result);
+      self.dato = result;
+      if (self.dato.users.data){
+        self.dataSet = self.dato.users.data
+        self.message = self.dato.data.message
       }
-    }, (err) => {
-      //Connection Failed Message
-      console.log("No Data");
-      console.log(JSON.stringify(err._body));
-    });
+    })
   }
 
   backToWelcome(){
