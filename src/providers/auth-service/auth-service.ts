@@ -3,8 +3,10 @@ import {Http, Headers, RequestOptions} from '@angular/http';
 import { StorageService } from '../../providers/storage-service/storage-service';
 import 'rxjs/add/operator/map';
 
-let apiUrl = 'http://localhost:3000/api/v1/';
-let validate_token = "auth/validate_token"
+
+let apiUrl = 'http://battu.apptec.cl/api/v1/';
+let validate_token = "auth/validate_token";
+
 @Injectable()
 export class AuthService {
 
