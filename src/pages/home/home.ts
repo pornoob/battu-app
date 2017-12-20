@@ -13,13 +13,19 @@ export class HomePage {
   public dato : any;
   public dataSet : any;
   public message : any;
+  public storage : any;
 
   constructor(public navCtrl: NavController, public app: App, public authService: AuthService,  private storageService: StorageService) {
       const response = JSON.parse(localStorage.getItem('userData'));
       this.userDetail = response.data;
       this.getDataUsers();
+      this.set_storage();
       console.log("Storage Fuera");
-      console.log(this.storageService.get('headers'));
+      console.log(this.storage);
+  }
+
+  set_storage(){
+    this.storage  = this.storageService.get("headers");
   }
 
   getDataUsers(){
@@ -46,4 +52,6 @@ export class HomePage {
     localStorage.clear();
     setTimeout(()=> this.backToWelcome(), 2000);
   }
+
+
 }
