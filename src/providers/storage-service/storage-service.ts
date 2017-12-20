@@ -15,7 +15,7 @@ export class StorageService {
     this.storage.set(key, value);
   }
   get(key: string) {
-    this.storage.get(key).then((value) => {
+    return this.storage.get(key).then((value) => {
       console.log('Data Dentro de la funcion', value);
       return value;
     });

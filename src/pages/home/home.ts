@@ -20,12 +20,18 @@ export class HomePage {
       this.userDetail = response.data;
       this.getDataUsers();
       this.set_storage();
-      console.log("Storage Fuera");
+      console.log("Storage Fuera de la funcion");
       console.log(this.storage);
   }
 
   set_storage(){
-    this.storage  = this.storageService.get("headers");
+    this.storageService.get("headers").then((result) => {
+      console.log("Dentro del set_storage:", result);
+    }, (err) => {
+      //Connection Failed Message
+      console.log("No Data");
+      console.log(JSON.stringify(err._body));
+    });
   }
 
   getDataUsers(){
